@@ -7,9 +7,9 @@
 
 
 
-#pragma warning (disable:4996)//scanfÇÔ¼ö´Â visual studio¿¡¼­ ¿¡·¯¸Ş¼¼Áö¸¦ µ¿¹İÇÏ¹Ç·Î º» ¸Ş½ÃÁö Ãß°¡.
-#define computer_num 4 // ÄÄÇ»ÅÍ·£´ı ÀÚ¸®¼ıÀÚ ÀÔ·Â 
-#define user_num computer_num //À¯Àú·£´ıÀÚ¸®¼ıÀÚ 
+#pragma warning (disable:4996)//scanfí•¨ìˆ˜ëŠ” visual studioì—ì„œ ì—ëŸ¬ë©”ì„¸ì§€ë¥¼ ë™ë°˜í•˜ë¯€ë¡œ ë³¸ ë©”ì‹œì§€ ì¶”ê°€.
+#define computer_num 4 // ì»´í“¨í„°ëœë¤ ìë¦¬ìˆ«ì ì…ë ¥ 
+#define user_num computer_num //ìœ ì €ëœë¤ìë¦¬ìˆ«ì 
 #define number_counter (computer_num*2)+2
 #define putchxy(x,y,c) {gotoxy(x,y); putch(c);}
 #define delay(n) Sleep(n)   
@@ -17,8 +17,8 @@
 
 
 
-int random_number(int random_number[]); //ÄÄÇ»ÅÍ ·£´ıÇÔ¼ö
-int play_game_user(int number[]); //¼ıÀÚÀÔ·Â 
+int random_number(int random_number[]); //ì»´í“¨í„° ëœë¤í•¨ìˆ˜
+int play_game_user(int number[]); //ìˆ«ìì…ë ¥ 
 
 typedef enum { NOCURSOR, SOLIDCURSOR, NORMALCURSOR } CURSOR_TYPE;
 
@@ -27,7 +27,7 @@ void setcursortype(CURSOR_TYPE c);
 
 void number_result(int computer[], int player[], int strike_count[], int ball_count[], int y, int chance);
 
-void LoadingStage();//·ÎµùÈ­¸é
+void LoadingStage();//ë¡œë”©í™”ë©´
 void window_graphic();
 
 void win_stage(int y, int chance);
@@ -55,34 +55,34 @@ int main()
 
 	int y = 0;
 
-	int computer[computer_num]; //ÄÄÇ»ÅÍ·£´ı¼ıÀÚ
-	random_number(computer); //ÇÔ¼ö·ÎºÎÅÍ ·£´ı¼ıÀÚ °¡Á®¿È
-	int player[user_num]; // ¼ıÀÚÀÔ·Â ÃÊ±âÈ­
+	int computer[computer_num]; //ì»´í“¨í„°ëœë¤ìˆ«ì
+	random_number(computer); //í•¨ìˆ˜ë¡œë¶€í„° ëœë¤ìˆ«ì ê°€ì ¸ì˜´
+	int player[user_num]; // ìˆ«ìì…ë ¥ ì´ˆê¸°í™”
 
-	setcursortype(NOCURSOR);//Ä¿¼­¾ø¾Ö±â
-	LoadingStage();//·ÎµùÈ­¸é
+	setcursortype(NOCURSOR);//ì»¤ì„œì—†ì• ê¸°
+	LoadingStage();//ë¡œë”©í™”ë©´
 	system("cls");
 	int chance = 10;
 
-	gotoxy(4, 2); printf(" ±â  ·Ï ");
+	gotoxy(4, 2); printf(" ê¸°  ë¡ ");
 	gotoxy(61, y + 1); printf("+-- SCORE BOARD ---+ ");
-	gotoxy(61, y + 2); printf("|  S ¡Û ¡Û ¡Û ¡Û   | ");
-	gotoxy(61, y + 3); printf("|  B ¡Û ¡Û ¡Û ¡Û   | ");
+	gotoxy(61, y + 2); printf("|  S â—‹ â—‹ â—‹ â—‹   | ");
+	gotoxy(61, y + 3); printf("|  B â—‹ â—‹ â—‹ â—‹   | ");
 	gotoxy(61, y + 4); printf("+------------------+ ");
 
-	gotoxy(61, y + 6); printf("+-  ³² Àº È½ ¼ö  -+ ");
+	gotoxy(61, y + 6); printf("+-  ë‚¨ ì€ íšŸ ìˆ˜  -+ ");
 	gotoxy(61, y + 7); printf("|        %d       | ", chance);
 	gotoxy(61, y + 8); printf("+-----------------+ ");
 
-	gotoxy(61, y + 10); printf("+-------°Ô ÀÓ ±Ô Ä¢----------+ ");
+	gotoxy(61, y + 10); printf("+-------ê²Œ ì„ ê·œ ì¹™----------+ ");
 	gotoxy(61, y + 11); printf("|                            | ");
-	gotoxy(61, y + 12); printf("| ÄÄÇ»ÅÍ ¼ıÀÚ Áßº¹¾È³ª¿È     | ");
+	gotoxy(61, y + 12); printf("| ì»´í“¨í„° ìˆ«ì ì¤‘ë³µì•ˆë‚˜ì˜´     | ");
 	gotoxy(61, y + 13); printf("|                            | ");
-	gotoxy(61, y + 14); printf("| »ç¿ëÀÚ Áßº¹¼ıÀÚÀÔ·Â ¹«½Ã   | ");
+	gotoxy(61, y + 14); printf("| ì‚¬ìš©ì ì¤‘ë³µìˆ«ìì…ë ¥ ë¬´ì‹œ   | ");
 	gotoxy(61, y + 15); printf("|                            | ");
-	gotoxy(61, y + 16); printf("| µµÀüÈ½¼ö´Â ÃÑ 10È¸         | ");
+	gotoxy(61, y + 16); printf("| ë„ì „íšŸìˆ˜ëŠ” ì´ 10íšŒ         | ");
 	gotoxy(61, y + 17); printf("|                            | ");
-	gotoxy(61, y + 18); printf("| ¼ıÀÚ¸¶´Ù °ø¹éÀ» ³Ö¾îÁÖ¼¼¿ä | ");
+	gotoxy(61, y + 18); printf("| ìˆ«ìë§ˆë‹¤ ê³µë°±ì„ ë„£ì–´ì£¼ì„¸ìš” | ");
 	gotoxy(61, y + 19); printf("|                            | ");
 	gotoxy(61, y + 20); printf("+----------------------------+ ");
 
@@ -91,17 +91,17 @@ int main()
 
 	while (1)
 	{
-		gotoxy(4, 21);	printf("test¿ë ÄÄÇ»ÅÍ¼ıÀÚ >> %d %d %d %d",
+		gotoxy(4, 21);	printf("testìš© ì»´í“¨í„°ìˆ«ì >> %d %d %d %d",
 			computer[0], computer[1], computer[2], computer[3]);
 
 		play_game_user(player);
 		number_result(computer, player, strike_count, ball_count, y, chance);
 		//gotoxy(61, 6); _beginthreadex(NULL, 0, Thread1, 0, 0, NULL);
 		chance--;
-		gotoxy(61, y + 6); printf("+-  ³² Àº È½ ¼ö  -+ ");
+		gotoxy(61, y + 6); printf("+-  ë‚¨ ì€ íšŸ ìˆ˜  -+ ");
 		gotoxy(61, y + 7); printf("|        %d        | ", chance);
 		gotoxy(61, y + 8); printf("+-----------------+ ");
-		gotoxy(4, 22);	printf("¹İÈ¯µÇ´Â À¯Àú¼ıÀÚ >> %d %d %d %d", player[0], player[1], player[2], player[3]);
+		gotoxy(4, 22);	printf("ë°˜í™˜ë˜ëŠ” ìœ ì €ìˆ«ì >> %d %d %d %d", player[0], player[1], player[2], player[3]);
 	}
 
 }
@@ -110,25 +110,25 @@ int random_number(int random_number[])
 {
 	srand(time(NULL));
 	int i;
-re_number: //goto¹®
-	for (i = 0; i <= computer_num; i++) //ÄÄÇ»ÅÍ ÁöÁ¤ÀÚ¸®¸¸Å­ ¼ıÀÚ·£´ıÁöÁ¤
+re_number: //gotoë¬¸
+	for (i = 0; i <= computer_num; i++) //ì»´í“¨í„° ì§€ì •ìë¦¬ë§Œí¼ ìˆ«ìëœë¤ì§€ì •
 	{
 		random_number[i] = rand() % 10;
 	}
 	int a = 0;
-	for (i; i <= computer_num; i++) //³ª¸ÓÁö (ÄÄÇ»ÅÍÁöÁ¤¼ıÀÚ-1°³) ¸¸Å­ ¹è¿­ 0ºÎÅÍ º¹»ç 
+	for (i; i <= computer_num; i++) //ë‚˜ë¨¸ì§€ (ì»´í“¨í„°ì§€ì •ìˆ«ì-1ê°œ) ë§Œí¼ ë°°ì—´ 0ë¶€í„° ë³µì‚¬ 
 	{
 		random_number[i] = random_number[a];
 		a++;
 	}
 	for (i = 0; i < computer_num; i++)
 	{
-		if (i == computer_num) //¹è¿­ ¸ñÇ¥ÁöÁ¡µµÂø½Ã ¹İº¹¹® Á¾·á 
+		if (i == computer_num) //ë°°ì—´ ëª©í‘œì§€ì ë„ì°©ì‹œ ë°˜ë³µë¬¸ ì¢…ë£Œ 
 		{
 			break;
 		}
 		if (random_number[i] == random_number[i + 1] || random_number[i] == random_number[i + 2] || random_number[i] == random_number[i + 3])
-		{ // 1 2 3 4 ÀüºÎ ºñ±³ ÇÏ³ª¶óµµ °°À¸¸é Ã³À½À¸·Î 
+		{ // 1 2 3 4 ì „ë¶€ ë¹„êµ í•˜ë‚˜ë¼ë„ ê°™ìœ¼ë©´ ì²˜ìŒìœ¼ë¡œ 
 			goto re_number;
 		}
 	}
@@ -139,11 +139,11 @@ int play_game_user(int number[])
 	static count_main = 0;
 
 	count_main++;
-error_back: // ¾È¾²·Á°íÇß´Âµ¥ »ı°¢ÇÒ½Ã°£ÀÌ ¾ø¾î¿ä ...;;
+error_back: // ì•ˆì“°ë ¤ê³ í–ˆëŠ”ë° ìƒê°í• ì‹œê°„ì´ ì—†ì–´ìš” ...;;
 	gotoxy(2, count_main + 2);
-	printf(" ¼ıÀÚ ÀÔ·Â >> ");
+	printf(" ìˆ«ì ì…ë ¥ >> ");
 	gotoxy(2, count_main + 2);
-	printf("%d¹øÂ° ±âÈ¸ !! ", count_main);
+	printf("%dë²ˆì§¸ ê¸°íšŒ !! ", count_main);
 
 	char string_number[20];
 
@@ -189,34 +189,34 @@ void number_result(int computer[], int player[], int strike_count[], int ball_co
 
 		gotoxy(25, m + 3); printf("----> strike = %d , ball = %d \n", strike_count[m], ball_count[m]);
 		if (strike_count[m] == 0) {
-			gotoxy(61, y + 2); printf("|  S ¡Û ¡Û ¡Û ¡Û   | ");
+			gotoxy(61, y + 2); printf("|  S â—‹ â—‹ â—‹ â—‹   | ");
 		}
 		if (strike_count[m] == 1) {
-			gotoxy(61, y + 2); printf("|  S ¡Ü ¡Û ¡Û ¡Û   | ");
+			gotoxy(61, y + 2); printf("|  S â— â—‹ â—‹ â—‹   | ");
 		}
 		if (strike_count[m] == 2) {
-			gotoxy(61, y + 2); printf("|  S ¡Ü ¡Ü ¡Û ¡Û   | ");
+			gotoxy(61, y + 2); printf("|  S â— â— â—‹ â—‹   | ");
 		}
 		if (strike_count[m] == 3) {
-			gotoxy(61, y + 2); printf("|  S ¡Ü ¡Ü ¡Ü ¡Û   | ");
+			gotoxy(61, y + 2); printf("|  S â— â— â— â—‹   | ");
 		}
 		if (strike_count[m] == 4) {
-			gotoxy(61, y + 2); printf("|  S ¡Ü ¡Ü ¡Ü ¡Ü   | ");
+			gotoxy(61, y + 2); printf("|  S â— â— â— â—   | ");
 		}
 		if (ball_count[m] == 0) {
-			gotoxy(61, y + 3); printf("|  B ¡Û ¡Û ¡Û ¡Û   | ");
+			gotoxy(61, y + 3); printf("|  B â—‹ â—‹ â—‹ â—‹   | ");
 		}
 		if (ball_count[m] == 1) {
-			gotoxy(61, y + 3); printf("|  B ¡Ü ¡Û ¡Û ¡Û   | ");
+			gotoxy(61, y + 3); printf("|  B â— â—‹ â—‹ â—‹   | ");
 		}
 		if (ball_count[m] == 2) {
-			gotoxy(61, y + 3); printf("|  B ¡Ü ¡Ü ¡Û ¡Û   | ");
+			gotoxy(61, y + 3); printf("|  B â— â— â—‹ â—‹   | ");
 		}
 		if (ball_count[m] == 3) {
-			gotoxy(61, y + 3); printf("|  B ¡Ü ¡Ü ¡Ü ¡Û   | ");
+			gotoxy(61, y + 3); printf("|  B â— â— â— â—‹   | ");
 		}
 		if (ball_count[m] == 4) {
-			gotoxy(61, y + 3); printf("|  B ¡Ü ¡Ü ¡Ü ¡Ü   | ");
+			gotoxy(61, y + 3); printf("|  B â— â— â— â—   | ");
 		}
 	}
 
@@ -234,7 +234,7 @@ void number_result(int computer[], int player[], int strike_count[], int ball_co
 
 
 }
-void LoadingStage()//·ÎµùÈ­¸é ¼±¾ğ
+void LoadingStage()//ë¡œë”©í™”ë©´ ì„ ì–¸
 {
 	int i;
 	for (i = 0; i < 45; i++)
@@ -249,16 +249,16 @@ void LoadingStage()//·ÎµùÈ­¸é ¼±¾ğ
 	}
 	delay(800);
 	gotoxy(35, 7);
-	printf("¼ı");
+	printf("ìˆ«");
 	delay(600);
 	gotoxy(38, 7);
-	printf("ÀÚ");
+	printf("ì");
 	delay(600);
 	gotoxy(41, 7);
-	printf("¾ß");
+	printf("ì•¼");
 	delay(600);
 	gotoxy(44, 7);
-	printf("±¸");
+	printf("êµ¬");
 	delay(600);
 	putchxy(48, 8, 'M');
 	delay(40);
@@ -273,12 +273,12 @@ void LoadingStage()//·ÎµùÈ­¸é ¼±¾ğ
 	putchxy(54, 8, 'y');
 	delay(40);
 	gotoxy(56, 8);
-	printf("BÁ¶");
+	printf("Bì¡°");
 	delay(1000);
 
 
 	gotoxy(30, 12);
-	printf("¾Æ¹«Å° ´©¸£¸é °ÔÀÓÁøÇà °¡´ÉÇÕ´Ï´Ù.");
+	printf("ì•„ë¬´í‚¤ ëˆ„ë¥´ë©´ ê²Œì„ì§„í–‰ ê°€ëŠ¥í•©ë‹ˆë‹¤.");
 
 	system("pause>null");
 
@@ -344,32 +344,32 @@ void setcursortype(CURSOR_TYPE c)
 void win_stage(int y, int chance)
 {
 	gotoxy(61, y + 1); printf("+-- SCORE BOARD ---+ ");
-	gotoxy(61, y + 2); printf("|  S ¡Ü ¡Ü ¡Ü ¡Ü   | ");
-	gotoxy(61, y + 3); printf("|  B ¡Û ¡Û ¡Û ¡Û   | ");
+	gotoxy(61, y + 2); printf("|  S â— â— â— â—   | ");
+	gotoxy(61, y + 3); printf("|  B â—‹ â—‹ â—‹ â—‹   | ");
 	gotoxy(61, y + 4); printf("+------------------+ ");
 
-	gotoxy(61, y + 6); printf("+-  ³² Àº È½ ¼ö  -+ ");
+	gotoxy(61, y + 6); printf("+-  ë‚¨ ì€ íšŸ ìˆ˜  -+ ");
 	gotoxy(61, y + 7); printf("|        %d       | ", chance);
 	gotoxy(61, y + 8); printf("+-----------------+ ");
 
-	gotoxy(61, y + 10); printf("+-------°Ô ÀÓ ±Ô Ä¢----------+ ");
+	gotoxy(61, y + 10); printf("+-------ê²Œ ì„ ê·œ ì¹™----------+ ");
 	gotoxy(61, y + 11); printf("|                            | ");
-	gotoxy(61, y + 12); printf("| ÄÄÇ»ÅÍ ¼ıÀÚ Áßº¹¾È³ª¿È     | ");
+	gotoxy(61, y + 12); printf("| ì»´í“¨í„° ìˆ«ì ì¤‘ë³µì•ˆë‚˜ì˜´     | ");
 	gotoxy(61, y + 13); printf("|                            | ");
-	gotoxy(61, y + 14); printf("| »ç¿ëÀÚ Áßº¹¼ıÀÚÀÔ·Â ¹«½Ã   | ");
+	gotoxy(61, y + 14); printf("| ì‚¬ìš©ì ì¤‘ë³µìˆ«ìì…ë ¥ ë¬´ì‹œ   | ");
 	gotoxy(61, y + 15); printf("|                            | ");
-	gotoxy(61, y + 16); printf("| µµÀüÈ½¼ö´Â ÃÑ 10È¸         | ");
+	gotoxy(61, y + 16); printf("| ë„ì „íšŸìˆ˜ëŠ” ì´ 10íšŒ         | ");
 	gotoxy(61, y + 17); printf("|                            | ");
-	gotoxy(61, y + 18); printf("| ¼ıÀÚ¸¶´Ù °ø¹éÀ» ³Ö¾îÁÖ¼¼¿ä | ");
+	gotoxy(61, y + 18); printf("| ìˆ«ìë§ˆë‹¤ ê³µë°±ì„ ë„£ì–´ì£¼ì„¸ìš” | ");
 	gotoxy(61, y + 19); printf("|                            | ");
 	gotoxy(61, y + 20); printf("+----------------------------+ ");
 	window_graphic();
 	delay(800);
 	gotoxy(16, 7);
-	printf("½Â");
+	printf("ìŠ¹");
 	delay(600);
 	gotoxy(35, 7);
-	printf("¸®");
+	printf("ë¦¬");
 	delay(600);
 	system("pause>null");
 	exit(0);
@@ -379,32 +379,32 @@ void win_stage(int y, int chance)
 void lose_stage(int y)
 {
 	gotoxy(61, y + 1); printf("+-- SCORE BOARD ---+ ");
-	gotoxy(61, y + 2); printf("|  S ¡Û ¡Û ¡Û ¡Û   | ");
-	gotoxy(61, y + 3); printf("|  B ¡Û ¡Û ¡Û ¡Û   | ");
+	gotoxy(61, y + 2); printf("|  S â—‹ â—‹ â—‹ â—‹   | ");
+	gotoxy(61, y + 3); printf("|  B â—‹ â—‹ â—‹ â—‹   | ");
 	gotoxy(61, y + 4); printf("+------------------+ ");
 
-	gotoxy(61, y + 6); printf("+-  ³² Àº È½ ¼ö  -+ ");
+	gotoxy(61, y + 6); printf("+-  ë‚¨ ì€ íšŸ ìˆ˜  -+ ");
 	gotoxy(61, y + 7); printf("|        0        | ");
 	gotoxy(61, y + 8); printf("+-----------------+ ");
 
-	gotoxy(61, y + 10); printf("+-------°Ô ÀÓ ±Ô Ä¢----------+ ");
+	gotoxy(61, y + 10); printf("+-------ê²Œ ì„ ê·œ ì¹™----------+ ");
 	gotoxy(61, y + 11); printf("|                            | ");
-	gotoxy(61, y + 12); printf("| ÄÄÇ»ÅÍ ¼ıÀÚ Áßº¹¾È³ª¿È     | ");
+	gotoxy(61, y + 12); printf("| ì»´í“¨í„° ìˆ«ì ì¤‘ë³µì•ˆë‚˜ì˜´     | ");
 	gotoxy(61, y + 13); printf("|                            | ");
-	gotoxy(61, y + 14); printf("| »ç¿ëÀÚ Áßº¹¼ıÀÚÀÔ·Â ¹«½Ã   | ");
+	gotoxy(61, y + 14); printf("| ì‚¬ìš©ì ì¤‘ë³µìˆ«ìì…ë ¥ ë¬´ì‹œ   | ");
 	gotoxy(61, y + 15); printf("|                            | ");
-	gotoxy(61, y + 16); printf("| µµÀüÈ½¼ö´Â ÃÑ 10È¸         | ");
+	gotoxy(61, y + 16); printf("| ë„ì „íšŸìˆ˜ëŠ” ì´ 10íšŒ         | ");
 	gotoxy(61, y + 17); printf("|                            | ");
-	gotoxy(61, y + 18); printf("| ¼ıÀÚ¸¶´Ù °ø¹éÀ» ³Ö¾îÁÖ¼¼¿ä | ");
+	gotoxy(61, y + 18); printf("| ìˆ«ìë§ˆë‹¤ ê³µë°±ì„ ë„£ì–´ì£¼ì„¸ìš” | ");
 	gotoxy(61, y + 19); printf("|                            | ");
 	gotoxy(61, y + 20); printf("+----------------------------+ ");
 	window_graphic();
 	delay(800);
 	gotoxy(16, 7);
-	printf("ÆĞ");
+	printf("íŒ¨");
 	delay(600);
 	gotoxy(35, 7);
-	printf("¹è");
+	printf("ë°°");
 	delay(600);
 	system("pause>null");
 	exit(0);
