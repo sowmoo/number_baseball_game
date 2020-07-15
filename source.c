@@ -1,240 +1,152 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 #include <time.h>
 #include <windows.h>
-#include <process.h>
 
 
-
-#pragma warning (disable:4996)//scanf함수는 visual studio에서 에러메세지를 동반하므로 본 메시지 추가.
-#define computer_num 4 // 컴퓨터랜덤 자리숫자 입력 
-#define user_num computer_num //유저랜덤자리숫자 
+#define NUM_SIZE 4 //게임숫자
+#define USER_BUFFER_SIZE 30 //유저입력버퍼
 #define number_counter (computer_num*2)+2
+#define GAME_LIFE 10
+
 #define putchxy(x,y,c) {gotoxy(x,y); putch(c);}
 #define delay(n) Sleep(n)   
 
-
-
-
-int random_number(int random_number[]); //컴퓨터 랜덤함수
-int play_game_user(int number[]); //숫자입력 
-
 typedef enum { NOCURSOR, SOLIDCURSOR, NORMALCURSOR } CURSOR_TYPE;
 
-void gotoxy(int x, int y);
-void setcursortype(CURSOR_TYPE c);
-
-void number_result(int computer[], int player[], int strike_count[], int ball_count[], int y, int chance);
-
-void LoadingStage();//로딩화면
-void window_graphic();
-
-void win_stage(int y, int chance);
-void lose_stage(int y);
-
-
-
-/*-------------------------------------------------------------------------------------------------------------*/
-
-/*unsigned _stdcall Thread1(void *arg) {
-	while (1) {
-		time_t t = time(NULL);
-		struct tm tm = *localtime(&t);
-		gotoxy(61, 6); printf("%d-%d-%d %d:%d:%d\n",
-			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
-			tm.tm_hour, tm.tm_min, tm.tm_sec);
-		delay(1000);
-	}
-}
-*/
-
-int main()
+struct data
 {
+	int strike_count;
+	int ball_count;
+	int user_number[4];
+};
+
+struct data data[10];
 
 
-	int y = 0;
+void gotoxy(int x, int y)
+{
+	COORD Cur;
+	Cur.X = x;
+	Cur.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
+}
 
-	int computer[computer_num]; //컴퓨터랜덤숫자
-	random_number(computer); //함수로부터 랜덤숫자 가져옴
-	int player[user_num]; // 숫자입력 초기화
-
-	setcursortype(NOCURSOR);//커서없애기
-	LoadingStage();//로딩화면
-	system("cls");
-	int chance = 10;
-
-	gotoxy(4, 2); printf(" 기  록 ");
-	gotoxy(61, y + 1); printf("+-- SCORE BOARD ---+ ");
-	gotoxy(61, y + 2); printf("|  S ○ ○ ○ ○   | ");
-	gotoxy(61, y + 3); printf("|  B ○ ○ ○ ○   | ");
-	gotoxy(61, y + 4); printf("+------------------+ ");
-
-	gotoxy(61, y + 6); printf("+-  남 은 횟 수  -+ ");
-	gotoxy(61, y + 7); printf("|        %d       | ", chance);
-	gotoxy(61, y + 8); printf("+-----------------+ ");
-
-	gotoxy(61, y + 10); printf("+-------게 임 규 칙----------+ ");
-	gotoxy(61, y + 11); printf("|                            | ");
-	gotoxy(61, y + 12); printf("| 컴퓨터 숫자 중복안나옴     | ");
-	gotoxy(61, y + 13); printf("|                            | ");
-	gotoxy(61, y + 14); printf("| 사용자 중복숫자입력 무시   | ");
-	gotoxy(61, y + 15); printf("|                            | ");
-	gotoxy(61, y + 16); printf("| 도전횟수는 총 10회         | ");
-	gotoxy(61, y + 17); printf("|                            | ");
-	gotoxy(61, y + 18); printf("| 숫자마다 공백을 넣어주세요 | ");
-	gotoxy(61, y + 19); printf("|                            | ");
-	gotoxy(61, y + 20); printf("+----------------------------+ ");
-
-	int strike_count[number_counter] = { 0 }, ball_count[number_counter] = { 0 };
-	window_graphic();
+void user_input(struct data *data, int *main_count) //유저 숫자입력 
+{
+	int count;
+	int i, j;
+	char number[USER_BUFFER_SIZE];
 
 	while (1)
 	{
-		gotoxy(4, 21);	printf("test용 컴퓨터숫자 >> %d %d %d %d",
-			computer[0], computer[1], computer[2], computer[3]);
+		gotoxy(2, 18); printf("숫자를 입력해주세요 (%d자리)--> ", NUM_SIZE);
 
-		play_game_user(player);
-		number_result(computer, player, strike_count, ball_count, y, chance);
-		//gotoxy(61, 6); _beginthreadex(NULL, 0, Thread1, 0, 0, NULL);
-		chance--;
-		gotoxy(61, y + 6); printf("+-  남 은 횟 수  -+ ");
-		gotoxy(61, y + 7); printf("|        %d        | ", chance);
-		gotoxy(61, y + 8); printf("+-----------------+ ");
-		gotoxy(4, 22);	printf("반환되는 유저숫자 >> %d %d %d %d", player[0], player[1], player[2], player[3]);
+
+
+		scanf("%[^\n]s", number); //유저 숫자입력 
+		while (getchar() != '\n');	//버퍼 비우기
+
+		if (strcmp(number, "exit") == 0)
+		{
+			exit(1);
+		}
+
+
+		for (i = 0, count = 0; i < USER_BUFFER_SIZE; i++) // 오류검출 
+		{
+			if (number[i] >= 48 && number[i] <= 57)
+			{
+				count++;
+			}
+		}
+		if (count < NUM_SIZE || count > NUM_SIZE)
+		{
+			gotoxy(2, 19); printf("숫자를 %d개 입력해주세요 (다시입력하세요)\n", NUM_SIZE);
+			continue;
+		}
+		break;
 	}
+	for (i = 0, j = 0, count = 0; i < USER_BUFFER_SIZE; i++)
+	{
+		if (number[i] >= 48 && number[i] <= 57)
+		{
+			data[*main_count].user_number[j] = number[i] - 48;
+			j++;
+			count++;
+		}
 
+		if (count == 4)
+		{
+			return;
+		}
+	}
 }
-/*-------------------------------------------------------------------------------------------------------------*/
-int random_number(int random_number[])
+
+void random_computer_number(int computer[])
 {
 	srand(time(NULL));
-	int i;
-re_number: //goto문
-	for (i = 0; i <= computer_num; i++) //컴퓨터 지정자리만큼 숫자랜덤지정
+
+	int i, j, counter;
+	for (;;)
 	{
-		random_number[i] = rand() % 10;
-	}
-	int a = 0;
-	for (i; i <= computer_num; i++) //나머지 (컴퓨터지정숫자-1개) 만큼 배열 0부터 복사 
-	{
-		random_number[i] = random_number[a];
-		a++;
-	}
-	for (i = 0; i < computer_num; i++)
-	{
-		if (i == computer_num) //배열 목표지점도착시 반복문 종료 
+		counter = 0;
+
+		for (i = 0; i < NUM_SIZE; i++)
 		{
-			break;
+			computer[i] = rand() % 10;
 		}
-		if (random_number[i] == random_number[i + 1] || random_number[i] == random_number[i + 2] || random_number[i] == random_number[i + 3])
-		{ // 1 2 3 4 전부 비교 하나라도 같으면 처음으로 
-			goto re_number;
-		}
-	}
-	return *random_number;
-}
-int play_game_user(int number[])
-{
-	static count_main = 0;
 
-	count_main++;
-error_back: // 안쓰려고했는데 생각할시간이 없어요 ...;;
-	gotoxy(2, count_main + 2);
-	printf(" 숫자 입력 >> ");
-	gotoxy(2, count_main + 2);
-	printf("%d번째 기회 !! ", count_main);
-
-	char string_number[20];
-
-	scanf("%d %d %d %d", &number[0], &number[1], &number[2], &number[3]);
-
-	if (number[0] == number[1] || number[0] == number[2] || number[0] == number[3]
-		|| number[1] == number[2] || number[1] == number[3]
-		|| number[2] == number[3])
-	{
-		goto error_back;
-	}
-
-	return *number;
-}
-void number_result(int computer[], int player[], int strike_count[], int ball_count[], int y, int chance)
-{
-
-	static count;
-	int j, k, m, i;
-
-	for (j = 0; j < user_num; j++)
-	{
-
-		for (k = 0; k < user_num; k++)
+		for (i = 0; i < NUM_SIZE; i++)
 		{
-
-
-			if (computer[j] == player[k])
+			for (j = 0; j < NUM_SIZE; j++)
 			{
-				if (j == k)
+				if (i == j)
 				{
-					strike_count[count]++;
+					continue;
+				}
+
+				if (computer[i] == computer[j])
+				{
+					counter = 1;
+					break;
+				}
+			}
+		}
+
+		if (counter == 0)
+		{
+			return;
+		}
+	}
+}
+
+void result(struct data *data, int computer[], int main_count)
+{
+	int i, j;
+	for (i = 0; i < NUM_SIZE; i++)
+	{
+		for (j = 0; j < NUM_SIZE; j++)
+		{
+			if (computer[i] == data[main_count].user_number[j])
+			{
+				if (i == j)
+				{
+					data[main_count].strike_count++;
+
 				}
 				else
 				{
-					ball_count[count]++;
+					data[main_count].ball_count++;
 				}
 			}
 		}
 	}
-	for (m = 0; m <= count; m++)
-	{
-
-		gotoxy(25, m + 3); printf("----> strike = %d , ball = %d \n", strike_count[m], ball_count[m]);
-		if (strike_count[m] == 0) {
-			gotoxy(61, y + 2); printf("|  S ○ ○ ○ ○   | ");
-		}
-		if (strike_count[m] == 1) {
-			gotoxy(61, y + 2); printf("|  S ● ○ ○ ○   | ");
-		}
-		if (strike_count[m] == 2) {
-			gotoxy(61, y + 2); printf("|  S ● ● ○ ○   | ");
-		}
-		if (strike_count[m] == 3) {
-			gotoxy(61, y + 2); printf("|  S ● ● ● ○   | ");
-		}
-		if (strike_count[m] == 4) {
-			gotoxy(61, y + 2); printf("|  S ● ● ● ●   | ");
-		}
-		if (ball_count[m] == 0) {
-			gotoxy(61, y + 3); printf("|  B ○ ○ ○ ○   | ");
-		}
-		if (ball_count[m] == 1) {
-			gotoxy(61, y + 3); printf("|  B ● ○ ○ ○   | ");
-		}
-		if (ball_count[m] == 2) {
-			gotoxy(61, y + 3); printf("|  B ● ● ○ ○   | ");
-		}
-		if (ball_count[m] == 3) {
-			gotoxy(61, y + 3); printf("|  B ● ● ● ○   | ");
-		}
-		if (ball_count[m] == 4) {
-			gotoxy(61, y + 3); printf("|  B ● ● ● ●   | ");
-		}
-	}
-
-	if (strike_count[count] == 4)
-	{
-		system("cls");
-		win_stage(y, chance);
-	}
-	count++;
-	if (count >= 10)
-	{
-		system("cls");
-		lose_stage(y);
-	}
-
-
 }
-void LoadingStage()//로딩화면 선언
+
+void game_loading_screen()
 {
 	int i;
 	for (i = 0; i < 45; i++)
@@ -281,13 +193,10 @@ void LoadingStage()//로딩화면 선언
 	printf("아무키 누르면 게임진행 가능합니다.");
 
 	system("pause>null");
-
-
 }
 
-void window_graphic() {
-
-
+void window_graphic()
+{
 	int i;
 	int y = 0;
 
@@ -309,47 +218,68 @@ void window_graphic() {
 	}
 
 
-
 }
 
-void gotoxy(int x, int y)
+int game_screen(int *chance, int *main_count, int *computer_number)
 {
-	COORD Cur;
-	Cur.X = x;
-	Cur.Y = y;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Cur);
-}
-void setcursortype(CURSOR_TYPE c)
-{
-	CONSOLE_CURSOR_INFO CurInfo;
+	window_graphic();
+	int y = 0;
+	gotoxy(2, 23); printf("test용 컴퓨터숫자 %d %d %d %d", computer_number[0], computer_number[1], computer_number[2], computer_number[3]);
 
-	switch (c) {
-	case NOCURSOR:
-		CurInfo.dwSize = 1;
-		CurInfo.bVisible = FALSE;
-		break;
-	case SOLIDCURSOR:
-		CurInfo.dwSize = 100;
-		CurInfo.bVisible = TRUE;
-		break;
-	case NORMALCURSOR:
-		CurInfo.dwSize = 20;
-		CurInfo.bVisible = TRUE;
-		break;
+	for (int m = 0; m < *main_count; m++)
+	{
+
+		gotoxy(5, m + 3); printf("%d %d %d %d", data[m].user_number[0], data[m].user_number[1], data[m].user_number[2], data[m].user_number[3]);
+		gotoxy(15, m + 3); printf("----> strike = %d , ball = %d \n", data[m].strike_count, data[m].ball_count);
+		gotoxy(4, 2); printf(" 기  록 ");
+		gotoxy(61, y + 1); printf("+-- SCORE BOARD ---+ ");
+
+		if (data[*main_count - 1].strike_count == 0)
+		{
+			gotoxy(61, y + 2); printf("|  S ○ ○ ○ ○   | ");
+		}
+		else if (data[*main_count - 1].strike_count == 1)
+		{
+			gotoxy(61, y + 2); printf("|  S ● ○ ○ ○   | ");
+		}
+		else if (data[*main_count - 1].strike_count == 2)
+		{
+			gotoxy(61, y + 2); printf("|  S ● ● ○ ○   | ");
+		}
+		else if (data[*main_count - 1].strike_count == 3)
+		{
+			gotoxy(61, y + 2); printf("|  S ● ● ● ○   | ");
+		}
+		else if (data[*main_count - 1].strike_count == 4)
+		{
+			gotoxy(61, y + 2); printf("|  S ● ● ● ●   | ");
+			return 1; //4스트라이크 종료 
+		}
+
+		if (data[*main_count - 1].ball_count == 0)
+		{
+			gotoxy(61, y + 3); printf("|  B ○ ○ ○ ○   | ");
+		}
+		if (data[*main_count - 1].ball_count == 1)
+		{
+			gotoxy(61, y + 3); printf("|  B ● ○ ○ ○   | ");
+		}
+		if (data[*main_count - 1].ball_count == 2)
+		{
+			gotoxy(61, y + 3); printf("|  B ● ● ○ ○   | ");
+		}
+		if (data[*main_count - 1].ball_count == 3)
+		{
+			gotoxy(61, y + 3); printf("|  B ● ● ● ○   | ");
+		}
+		if (data[*main_count - 1].ball_count == 4)
+		{
+			gotoxy(61, y + 3); printf("|  B ● ● ● ●   | ");
+		}
 	}
-	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &CurInfo);
-}
-
-
-void win_stage(int y, int chance)
-{
-	gotoxy(61, y + 1); printf("+-- SCORE BOARD ---+ ");
-	gotoxy(61, y + 2); printf("|  S ● ● ● ●   | ");
-	gotoxy(61, y + 3); printf("|  B ○ ○ ○ ○   | ");
 	gotoxy(61, y + 4); printf("+------------------+ ");
-
 	gotoxy(61, y + 6); printf("+-  남 은 횟 수  -+ ");
-	gotoxy(61, y + 7); printf("|        %d       | ", chance);
+	gotoxy(61, y + 7); printf("|        %d       | ", *chance);
 	gotoxy(61, y + 8); printf("+-----------------+ ");
 
 	gotoxy(61, y + 10); printf("+-------게 임 규 칙----------+ ");
@@ -358,26 +288,18 @@ void win_stage(int y, int chance)
 	gotoxy(61, y + 13); printf("|                            | ");
 	gotoxy(61, y + 14); printf("| 사용자 중복숫자입력 무시   | ");
 	gotoxy(61, y + 15); printf("|                            | ");
-	gotoxy(61, y + 16); printf("| 도전횟수는 총 10회         | ");
+	gotoxy(61, y + 16); printf("| 도전횟수는 총 %d회         | ", GAME_LIFE);
 	gotoxy(61, y + 17); printf("|                            | ");
-	gotoxy(61, y + 18); printf("| 숫자마다 공백을 넣어주세요 | ");
+	gotoxy(61, y + 18); printf("| 종료는 exit를 입력해주세요 | ");
 	gotoxy(61, y + 19); printf("|                            | ");
 	gotoxy(61, y + 20); printf("+----------------------------+ ");
-	window_graphic();
-	delay(800);
-	gotoxy(16, 7);
-	printf("승");
-	delay(600);
-	gotoxy(35, 7);
-	printf("리");
-	delay(600);
-	system("pause>null");
-	exit(0);
 
+	return 0; //아무변화없음 
 }
 
-void lose_stage(int y)
+void lose_stage()
 {
+	int y = 0;
 	gotoxy(61, y + 1); printf("+-- SCORE BOARD ---+ ");
 	gotoxy(61, y + 2); printf("|  S ○ ○ ○ ○   | ");
 	gotoxy(61, y + 3); printf("|  B ○ ○ ○ ○   | ");
@@ -406,6 +328,129 @@ void lose_stage(int y)
 	gotoxy(35, 7);
 	printf("배");
 	delay(600);
+	gotoxy(13, 10);
+	printf("아무키 누르면 게임진행 가능합니다.");
 	system("pause>null");
-	exit(0);
+
+}
+
+void setcursortype(CURSOR_TYPE c)
+{
+	CONSOLE_CURSOR_INFO CurInfo;
+
+	switch (c) {
+	case NOCURSOR:
+		CurInfo.dwSize = 1;
+		CurInfo.bVisible = FALSE;
+		break;
+	case SOLIDCURSOR:
+		CurInfo.dwSize = 100;
+		CurInfo.bVisible = TRUE;
+		break;
+	case NORMALCURSOR:
+		CurInfo.dwSize = 20;
+		CurInfo.bVisible = TRUE;
+		break;
+	}
+	SetConsoleCursorInfo(GetStdHandle(STD_OUTPUT_HANDLE), &CurInfo);
+}
+
+
+
+void win_stage(int *chance)
+{
+	int y = 0;
+
+	gotoxy(61, y + 1); printf("+-- SCORE BOARD ---+ ");
+	gotoxy(61, y + 2); printf("|  S ● ● ● ●   | ");
+	gotoxy(61, y + 3); printf("|  B ○ ○ ○ ○   | ");
+	gotoxy(61, y + 4); printf("+------------------+ ");
+
+	gotoxy(61, y + 6); printf("+-  남 은 횟 수  -+ ");
+	gotoxy(61, y + 7); printf("|        %d       | ", *chance);
+	gotoxy(61, y + 8); printf("+-----------------+ ");
+
+	gotoxy(61, y + 10); printf("+-------게 임 규 칙----------+ ");
+	gotoxy(61, y + 11); printf("|                            | ");
+	gotoxy(61, y + 12); printf("| 컴퓨터 숫자 중복안나옴     | ");
+	gotoxy(61, y + 13); printf("|                            | ");
+	gotoxy(61, y + 14); printf("| 사용자 중복숫자입력 무시   | ");
+	gotoxy(61, y + 15); printf("|                            | ");
+	gotoxy(61, y + 16); printf("| 도전횟수는 총 10회         | ");
+	gotoxy(61, y + 17); printf("|                            | ");
+	gotoxy(61, y + 18); printf("| 숫자마다 공백을 넣어주세요 | ");
+	gotoxy(61, y + 19); printf("|                            | ");
+	gotoxy(61, y + 20); printf("+----------------------------+ ");
+	window_graphic();
+	delay(800);
+	gotoxy(16, 7);
+	printf("승");
+	delay(600);
+	gotoxy(35, 7);
+	printf("리");
+	delay(600);
+	gotoxy(13, 10);
+	printf("아무키 누르면 게임진행 가능합니다.");
+
+	system("pause>null");
+}
+
+int main()
+{
+	int chance;
+	int main_count;
+	int computer_number[4] = { 0, };
+	//game_loading_screen(); //게임시작시 처음한번 로딩화면출력 
+	setcursortype(NOCURSOR);
+	//system("cls");	
+
+	for (;;)
+	{
+		chance = GAME_LIFE; //게임라이프 초기화 
+		main_count = 0; // 현재라운드		
+		int game_over;
+		memset(&data, 0, sizeof(struct data)); //게임기록 초기화
+		random_computer_number(computer_number); //컴퓨터 랜덤숫자 4개 지정 
+		setcursortype(NOCURSOR);
+		system("cls");
+		window_graphic();
+		gotoxy(61, 1); printf("+-- SCORE BOARD ---+ ");
+		gotoxy(61, 2); printf("|  S ○ ○ ○ ○   | ");
+		gotoxy(61, 3); printf("|  B ○ ○ ○ ○   | ");
+		gotoxy(61, 4); printf("+------------------+ ");
+
+		for (;;)
+		{
+			game_over = game_screen(&chance, &main_count, computer_number);
+			if (game_over == 1)
+			{
+				break;
+			}
+			user_input(data, &main_count);
+			result(data, computer_number, main_count);
+			
+
+			main_count++;
+			if (--chance == 0)
+			{
+				break;
+			}
+			system("cls");
+		}
+		if (game_over == 1)
+		{
+			system("cls");
+			window_graphic();
+			win_stage(&chance);
+			gotoxy(16, 20);
+		}
+		else
+		{
+			system("cls");
+			window_graphic();
+			lose_stage();
+			gotoxy(16, 20);
+		}
+
+	}
 }
